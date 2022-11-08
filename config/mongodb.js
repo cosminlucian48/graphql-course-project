@@ -1,0 +1,1 @@
+module.exports.MONGODB = "mongodb+srv://student:student@cluster0.g6relti.mongodb.net/?retryWrites=true&w=majority";
