@@ -11,9 +11,7 @@ const { getUserFromToken } = require('../utils/auth');
 const server = new ApolloServer({
     typeDefs,
     resolvers,
-    context: async ({ req }) => {
-        return {loggedUser:getUserFromToken(req.headers.authorization)};
-    }
+    context: ({ req }) => ({loggedUser:getUserFromToken(req.headers.authorization)})
 });
 
 

@@ -36,8 +36,8 @@ type Query{
 
 type Mutation {
     registerUser(registerInput: RegisterInput): User
-    deleteUser(ID: ID!): Boolean
-    editUser(ID: ID!, userInput: UserInput): Boolean
+    deleteUserById(ID: ID!): Boolean
+    editUserById(ID: ID!, userInput: UserInput): Boolean
     loginUser(loginInput: LoginInput): String
 }
 `
