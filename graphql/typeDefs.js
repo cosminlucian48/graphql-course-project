@@ -16,15 +16,29 @@ input UserInput{
     password: String
 }
 
+input RegisterInput{
+    firstName: String
+    lastName: String
+    email: String
+    password: String
+    confirmPassword: String
+}
+
+input LoginInput{
+    email: String
+    password: String
+}
+
 type Query{
     getUserById(ID: ID!): User!
     getAllUsers: [User]
 }
 
 type Mutation {
-    registerUser(userInput: UserInput): User!
+    registerUser(registerInput: RegisterInput): User
     deleteUser(ID: ID!): Boolean
     editUser(ID: ID!, userInput: UserInput): Boolean
+    loginUser(loginInput: LoginInput): String
 }
 `
 
