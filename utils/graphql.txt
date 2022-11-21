@@ -1,0 +1,171 @@
+
+query getAllUssers {
+  getAllUsers {
+    id
+    firstName
+    lastName
+    email
+    createdAt
+    password
+  }
+}
+
+ mutation registerOneUser{
+  registerUser(registerInput: {
+    firstName:"sd",
+    lastName:"ss",
+    email:"cosminmardian@yahoo.co",
+    password:"parola",
+    confirmPassword:"parola"}) {
+    firstName
+    lastName
+    email
+    createdAt
+    password
+  }
+}
+
+
+mutation login {
+  loginUser(loginInput: {
+    email:"cosminmardian@yahoo.co",
+    password:"parola"
+  })
+}
+
+
+mutation deleteUserById{
+  deleteUserById(ID: "636d176d5f39bbef28f9331a")
+}
+
+mutation editUserById{
+  editUserById(ID: "636b9d19921692d6a106cc8b", userInput: {
+    firstName:"Marocanu",
+    email:"cosminlucian2@yahoo.com"
+  })
+}
+
+query getAllPosts{
+  getAllPosts {
+    id
+    body
+    createdAt
+    email
+    comments{
+      id
+      body
+      email
+    }
+    likes{
+      email
+      createdAt
+    }
+  }
+}
+
+query getPostById{
+  getPostById(ID: "637a3cebc88f030a12e3e95f") {
+    id
+    body
+    createdAt
+    email
+  }
+}
+
+mutation deletePostById {
+  deletePostById(ID: "637a3ce0c88f030a12e3e95d")
+}
+
+mutation createPost{
+  createPost(body: "tati REAL POST") {
+    id
+    body
+    createdAt
+    email
+  }
+}
+
+
+mutation createComment {
+  createComment(postId: "637a3cebc88f030a12e3e95f", body: "FIRST REAL COMMENT") {
+    id
+    body
+    createdAt
+    email
+    comments {
+      id
+      createdAt
+      email
+      body
+    }
+    likes {
+      id
+      createdAt
+      email
+    }
+  }
+}
+
+
+mutation deleteComment{
+  deleteComment(postId: "637a3cebc88f030a12e3e95f", commentId: "637a76e7fc5a294359b772e9") {
+    id
+    body
+    createdAt
+    email
+    comments {
+      id
+      createdAt
+      email
+      body
+    }
+    likes {
+      id
+      createdAt
+      email
+    }
+  }
+}
+
+
+
+
+mutation likePost{
+  likePost(ID: "637a3cffc88f030a12e3e967") {
+    id
+    body
+    createdAt
+    email
+    comments {
+      id
+      createdAt
+      email
+      body
+    }
+    likes {
+      id
+      createdAt
+      email
+    }
+  }
+}
+
+subscription subpub{
+  newPost {
+    id
+    body
+    createdAt
+    email
+    comments {
+      id
+      createdAt
+      email
+      body
+    }
+    likes {
+      id
+      createdAt
+      email
+    }
+  }
+}

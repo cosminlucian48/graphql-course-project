@@ -1,0 +1,11 @@
+jwt user ✅
+multiple schemas ✅
+input type ✅
+union type
+interface type
+query ✅
+mutation ✅
+subscription ✅
+rezolvere ✅
+conectare DB (mongo) ✅
+role-uri pe user 

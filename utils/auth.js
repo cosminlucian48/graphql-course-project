@@ -1,6 +1,6 @@
 const {MY_SECRET_KEY} = require('../config/jwt');
 const jwt = require('jsonwebtoken');
-const {ApolloError} = require('apollo-server');
+const {ApolloError} = require('apollo-server-express');
 module.exports.getUserFromToken = (token) => {
     try{
         return jwt.verify(token.replace('Bearer ', ''), MY_SECRET_KEY);

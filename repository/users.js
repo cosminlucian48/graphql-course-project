@@ -1,19 +1,16 @@
 const User = require('../models/User');
-const { ApolloError } = require('apollo-server-errors');
+const { ApolloError } = require('apollo-server-express');
 const bcrypt = require("bcryptjs");
 const {checkIfUserLoggedIn} = require('../utils/auth');
+const {validateRegisterInput} = require('../utils/validators');
 
 module.exports.registerHandler = async (args) => {
-    const { firstName, lastName, email, password, confirmPassword } = args;
-    if (password != confirmPassword) {
-        throw new ApolloError("Passwords dont match.", 'PASSWORDS_DONT_MATCH');
-    }
+    if(!validateRegisterInput(args)) return;
+    const { firstName, lastName, email, password} = args;
 
     const oldUser = await User.findOne({ email });
-    if (oldUser) {
-        throw new ApolloError("A user with this email already exists: " + email, 'USER_ALREADY_EXISTS');
-    }
-
+    if (oldUser) throw new ApolloError("A user with this email already exists: " + email, 'USER_ALREADY_EXISTS');
+    
     var encryptedPassword = await bcrypt.hash(password, 10);
 
     const newUser = new User({

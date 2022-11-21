@@ -2,10 +2,14 @@ const User = require('../models/User');
 const { ApolloError } = require('apollo-server-errors');
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const {validateLoginInput} = require('../utils/validators');
 const { MY_SECRET_KEY } = require('../config/jwt');
 
 module.exports.loginHandler = async (args) => {
+    if(!validateLoginInput(args)) return;
+    
     const {email, password} = args;
+
     const user = await User.findOne({ email });
     if (!user) throw new ApolloError("No user with this email " + email, 'EMAIL_NOT_FOUND');
 
