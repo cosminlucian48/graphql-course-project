@@ -5,26 +5,28 @@ const User = require('../models/User');
 
 module.exports.getAllPosts = async (context) => {
     if (!checkIfUserLoggedIn(context)) return;
-    return await Post.find();
+    const posts = await Post.find().populate('author');
+    return posts ;
 }
 
 module.exports.getPostById = async (args, context) => {
     if (!checkIfUserLoggedIn(context)) return;
     const { ID } = args;
-    return await Post.findById(ID);
+    const post = await Post.findById(ID).populate('author');
+    return post;
 }
 
 module.exports.createPost = async (args, context) => {
-    const author = checkIfUserLoggedIn(context);
-    if (!author) return;
+    const contextUser = checkIfUserLoggedIn(context);
+    if (!contextUser) return;
     const { body } = args;
-    
+    const author = await User.findById(contextUser.user_id);
 
     const newPost = new Post({
         body,
-        user: author.id,
         email: author.email,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        author
     });
 
     const post = await newPost.save();
@@ -69,7 +71,6 @@ module.exports.createLike = async (args, context) => {
             });
         }
         const res = await post.save();
-
         return post;
 
     } catch (err) {

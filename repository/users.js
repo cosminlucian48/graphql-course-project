@@ -1,6 +1,7 @@
-const User = require('../models/User');
 const { ApolloError } = require('apollo-server-express');
 const bcrypt = require("bcryptjs");
+
+const User = require('../models/User');
 const {checkIfUserLoggedIn} = require('../utils/auth');
 const {validateRegisterInput} = require('../utils/validators');
 

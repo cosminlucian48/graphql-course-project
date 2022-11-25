@@ -17,9 +17,9 @@ const postSchema = mongoose.Schema({
             createdAt: String
         }
     ],
-    user:{
+    author:{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'users'
+        ref: 'User'
     }
 });
 

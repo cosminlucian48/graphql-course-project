@@ -37,6 +37,9 @@ type Post{
     email: String
     comments: [Comment]!
     likes: [Like]!
+    likeCount: Int!
+    commentCount: Int!
+    author: User
 }
 
 type Comment{
@@ -51,7 +54,6 @@ type Like{
     createdAt: String!
     email: String!
 }
-
 
 type Query{
     getUserById(ID: ID!): User!

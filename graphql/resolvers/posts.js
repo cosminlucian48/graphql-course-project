@@ -9,7 +9,6 @@ module.exports = {
             return getAllPosts(context);
         },
         async getPostById(_, args, context) {
-
             return getPostById(args, context);
         },
 

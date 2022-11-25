@@ -30,9 +30,7 @@ const serverCleanup = useServer({ schema }, wsServer);
 const server = new ApolloServer({
     schema,
     plugins: [
-        // Proper shutdown for the HTTP server.
         ApolloServerPluginDrainHttpServer({ httpServer }),
-        // Proper shutdown for the WebSocket server.
         {
             async serverWillStart() {
                 return {

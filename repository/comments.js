@@ -23,8 +23,6 @@ module.exports.createComment = async (args, context) => {
         });
         await post.save();
         return post;
-
-
     } catch (err) {
         throw new ApolloError("Post not found!", "POST_NOT_FOUND");
     }
