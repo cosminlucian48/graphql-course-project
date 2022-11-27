@@ -6,14 +6,29 @@ const User = require('../models/User');
 module.exports.getAllPosts = async (context) => {
     if (!checkIfUserLoggedIn(context)) return;
     const posts = await Post.find().populate('author');
-    return posts ;
+    return posts;
 }
 
 module.exports.getPostById = async (args, context) => {
     if (!checkIfUserLoggedIn(context)) return;
     const { ID } = args;
-    const post = await Post.findById(ID).populate('author');
-    return post;
+    try {
+        const post = await Post.findById(ID).populate('author');
+        return post;
+    } catch (err) {
+        throw new ApolloError("No post with that ID.", 'WRONG_POST_ID');
+    }
+}
+
+module.exports.getPostsByUser = async (args, context) => {
+    if (!checkIfUserLoggedIn(context)) return;
+    const { author_email } = args;
+    const posts = await Post.find().populate('author');
+    const filteredPosts = posts.filter(
+        post => post.author != undefined &&
+            post.author.email != undefined &&
+            post.author.email == author_email);
+    return filteredPosts;
 }
 
 module.exports.createPost = async (args, context) => {
@@ -24,33 +39,30 @@ module.exports.createPost = async (args, context) => {
 
     const newPost = new Post({
         body,
-        email: author.email,
         createdAt: new Date().toISOString(),
         author
     });
-
     const post = await newPost.save();
 
     context.pubsub.publish('NEW_POST', {
         newPost: post
     });
-
     return post;
-
 }
 
 module.exports.deletePostById = async (args, context) => {
     if (!checkIfUserLoggedIn(context)) return;
     const { ID } = args;
-    const post = await Post.findById(ID);
-    //TODO: delete only certain posts
-    if (!post) {
+    try {
+        //TODO: delete only certain posts
+        const post = await Post.findById(ID);
+        if (!post) throw "doesnt exist";
+        const res = await Post.deleteOne({ _id: ID });  // return 3 fields, last beeing deleteCount
+        const wasDeleted = res.deletedCount;
+        return wasDeleted;
+    } catch (err) {
         throw new ApolloError("No post with that ID.", 'WRONG_POST_ID');
     }
-    const res = await Post.deleteOne({ _id: ID });  // return 3 fields, last beeing deleteCount
-    const wasDeleted = res.deletedCount;
-    return wasDeleted;
-    // return await Post.deleteOne(ID);
 }
 
 module.exports.createLike = async (args, context) => {
@@ -66,7 +78,7 @@ module.exports.createLike = async (args, context) => {
         } else {
             //not liked
             post.likes.push({
-                email:user.email,
+                email: user.email,
                 createdAt: new Date().toISOString()
             });
         }

@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 
 const postSchema = mongoose.Schema({
     body: String,
-    email: String,
     createdAt: String, 
     comments: [
         {

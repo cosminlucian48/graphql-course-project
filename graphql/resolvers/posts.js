@@ -1,4 +1,4 @@
-const { getAllPosts, getPostById, deletePostById, createPost, createLike } = require('../../repository/posts.js');
+const { getAllPosts, getPostById, deletePostById, createPost, createLike, getPostsByUser} = require('../../repository/posts.js');
 const {PubSub} = require('graphql-subscriptions');
 
 const pubsub = new PubSub();
@@ -11,6 +11,9 @@ module.exports = {
         async getPostById(_, args, context) {
             return getPostById(args, context);
         },
+        async getPostsByUser(_, args, context){
+            return getPostsByUser(args,context);
+        }
 
     },
     Mutation: {
