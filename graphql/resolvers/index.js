@@ -2,10 +2,12 @@ const usersResolvers = require('./users');
 const postsResolvers = require('./posts');
 const interestsResolvers = require('./interests');
 const commentsResolvers = require('./comments');
+const { ApolloError } = require('apollo-server-errors');
 
 module.exports = {
     Interest: {
         __resolveType(obj, context, info) {
+            console.log("INTEREST:", obj);
             if (obj.sport_type) {
                 return 'SportInterest';
             }

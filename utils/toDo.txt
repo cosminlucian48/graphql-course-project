@@ -2,7 +2,7 @@ jwt user ✅
 multiple schemas ✅
 input type ✅
 union type
-interface type
+interface type✅
 query ✅
 mutation ✅
 subscription ✅

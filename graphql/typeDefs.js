@@ -8,6 +8,7 @@ type User {
     email: String
     createdAt: String
     password: String
+    interests: [Interest]
 }
 
 input UserInput{
@@ -56,18 +57,18 @@ type Like{
 }
 
 interface Interest {
-    id: ID!
+    id: ID
     title: String
 }
 
 type SportInterest implements Interest {
-    id: ID!
+    id: ID
     title: String
     sport_type: String
     number_of_players: Int
 }
 type GameInterest implements Interest {
-    id: ID!
+    id: ID
     title: String
     game_genre: String
     game_type:String
@@ -75,7 +76,7 @@ type GameInterest implements Interest {
 }
 
 type MovieInterest implements Interest{
-    id: ID!
+    id: ID
     title: String, 
     movie_genre: String, 
     age: Int,
@@ -115,6 +116,7 @@ type Mutation {
     deleteComment(postId:ID!, commentId:ID!):Post!
     likePost(ID:ID!):Post! 
     createInterest(interestInput: InterestInput): Interest
+    addInterestToUser(interestId: ID!): User
 }
 type Subscription {
     newPost: Post!
