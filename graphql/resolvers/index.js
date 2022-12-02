@@ -20,9 +20,23 @@ module.exports = {
             return null;
         },
     },
+    PostInteraction:{
+        __resolveType(obj,context,info){
+            console.log({obj});
+            if(obj.body){
+                return 'Comment';
+            }
+            return 'Like';
+        }
+    },
     Post: {
         likeCount: (parent) => parent.likes.length,
-        commentCount: (parent) => parent.comments.length
+        commentCount: (parent) => parent.comments.length,
+        author: async (parent) => {
+            const user =  await parent.populate('author');
+            user.author.posts = [];
+            return user.author;
+        }
     }, // each time a Query/Mutation/Subscription returns a post it will go through this code
     Query: {
         ...usersResolvers.Query, //spread operatoor

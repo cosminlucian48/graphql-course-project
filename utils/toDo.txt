@@ -1,7 +1,7 @@
 jwt user ✅
 multiple schemas ✅
 input type ✅
-union type
+union type ✅
 interface type✅
 query ✅
 mutation ✅
@@ -9,5 +9,6 @@ subscription ✅
 rezolvere ✅
 conectare DB (mongo) ✅
 role-uri pe user 
-parent 
+parent ✅
+chain resolver ✅
 nested ✅

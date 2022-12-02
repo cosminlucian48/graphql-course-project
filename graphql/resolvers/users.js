@@ -1,14 +1,17 @@
 const User = require('../../models/User');
 const { loginHandler } = require('../../repository/login');
-const { registerHandler, deleteUserById, editUserById, getAllUsers, addInterestToUser, getUserById } = require('../../repository/users.js');
+const { searchUserInteraction, registerHandler, deleteUserById, editUserById, getAllUsers, addInterestToUser, getUserById, getLoggedUser, deleteUserInterestById } = require('../../repository/users.js');
 
 module.exports = {
     Query: {
-        async getUserById(_, args,context) { //parent, args,
+        async getUserById(_, args, context) { //parent, args,
             return getUserById(args, context);
         },
         async getAllUsers(_, args, context) {
             return getAllUsers(context);
+        },
+        async getLoggedUser(_, args, context) {
+            return getLoggedUser(args, context);
         }
     },
     Mutation: {
@@ -28,6 +31,9 @@ module.exports = {
         },
         async addInterestToUser(_, args, context) {
             return addInterestToUser(args, context);
+        },
+        async deleteUserInterestById(_, args, context) {
+            return deleteUserInterestById(args, context);
         }
     }
 }

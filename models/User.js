@@ -9,6 +9,10 @@ const userSchema = new mongoose.Schema({
     interests:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Interest'
+    }],
+    posts:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Post'
     }]
 });
 

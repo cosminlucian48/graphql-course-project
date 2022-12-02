@@ -9,6 +9,7 @@ type User {
     createdAt: String
     password: String
     interests: [Interest]
+    posts: [Post]
 }
 
 input UserInput{
@@ -31,6 +32,8 @@ input LoginInput{
     password: String
 }
 
+union PostInteraction = Comment | Like
+
 type Post{
     id: ID!
     body: String
@@ -41,7 +44,6 @@ type Post{
     commentCount: Int
     author: User
 }
-
 
 type Comment{
     id: ID!
@@ -97,12 +99,16 @@ input InterestInput{
 
 type Query{
     getUserById(ID: ID!): User!
+    getLoggedUser:User!
     getAllUsers: [User]
     getAllPosts: [Post]
     getPostById(ID: ID!): Post!
     getPostsByUser(author_email:String!): [Post]
     getInterestById(ID: ID!): Interest
     getAllInterests:[Interest]
+    getInterestByType(type: String!): [Interest]
+    getInterestsForLoggedUser:[Interest]
+    getPostInteraction(ID: ID!): [PostInteraction]
 }
 
 type Mutation {
@@ -116,7 +122,9 @@ type Mutation {
     deleteComment(postId:ID!, commentId:ID!):Post!
     likePost(ID:ID!):Post! 
     createInterest(interestInput: InterestInput): Interest
+    deleteInterestById(ID:ID!): Boolean
     addInterestToUser(interestId: ID!): User
+    deleteUserInterestById(interestId: ID!): User
 }
 type Subscription {
     newPost: Post!

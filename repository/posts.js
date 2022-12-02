@@ -35,7 +35,7 @@ module.exports.createPost = async (args, context) => {
     const contextUser = checkIfUserLoggedIn(context);
     if (!contextUser) return;
     const { body } = args;
-    const author = await User.findById(contextUser.user_id);
+    const author = await User.findById(contextUser.user_id).populate('posts');
 
     const newPost = new Post({
         body,
@@ -43,6 +43,8 @@ module.exports.createPost = async (args, context) => {
         author
     });
     const post = await newPost.save();
+    author.posts.push(post);
+    const res = await author.save();
 
     context.pubsub.publish('NEW_POST', {
         newPost: post
@@ -88,4 +90,19 @@ module.exports.createLike = async (args, context) => {
     } catch (err) {
         throw new ApolloError("Post not found!", "POST_NOT_FOUND");
     }
+}
+
+module.exports.getPostInteraction = async (args,context) => {
+    if (!checkIfUserLoggedIn(context)) return;
+    const {ID} = args;
+    const post = await Post.findById(ID).populate('author');
+    if(!post){
+        throw new ApolloError("User not found.", "USER_NOT_FOUND");
+    }
+    const comments = post.comments;
+    const likes = post.likes;
+    const res = comments.concat(likes)
+    // console.log({res})
+    return res;
+    // console.log(commments+likes)
 }

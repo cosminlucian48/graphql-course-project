@@ -1,5 +1,5 @@
-const { getAllPosts, getPostById, deletePostById, createPost, createLike, getPostsByUser} = require('../../repository/posts.js');
-const {PubSub} = require('graphql-subscriptions');
+const { getAllPosts, getPostById, deletePostById, createPost, createLike, getPostsByUser, getPostInteraction } = require('../../repository/posts.js');
+const { PubSub } = require('graphql-subscriptions');
 
 const pubsub = new PubSub();
 
@@ -11,8 +11,11 @@ module.exports = {
         async getPostById(_, args, context) {
             return getPostById(args, context);
         },
-        async getPostsByUser(_, args, context){
-            return getPostsByUser(args,context);
+        async getPostsByUser(_, args, context) {
+            return getPostsByUser(args, context);
+        },
+        async getPostInteraction(_, args, context) {
+            return getPostInteraction(args, context);
         }
 
     },
@@ -30,7 +33,7 @@ module.exports = {
     },
     Subscription: {
         newPost: {
-            subscribe() { 
+            subscribe() {
                 const asyncIterator = pubsub.asyncIterator('NEW_POST');
                 return asyncIterator;
             }
