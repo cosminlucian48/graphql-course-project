@@ -10,7 +10,7 @@ module.exports.getAllInterests = async (_, context) => {
 
 module.exports.getInterestById = async (args, context) => {
     if (!checkIfUserLoggedIn(context)) return;
-    const {ID} = args;
+    const { ID } = args;
     return await Interest.findById(ID);
 }
 
@@ -37,6 +37,7 @@ module.exports.getInterestByType = async (args, context) => {
 module.exports.createInterest = async (args, context) => {
     const contextUser = checkIfUserLoggedIn(context);
     if (!contextUser) return;
+    if (contextUser.role != 1) throw new ApolloError("Only Admins can create interests.", "NOT_ALLOWED");
     const { title, sport_type, number_of_players, game_genre, game_type, game_platform, movie_genre, age, movie_platform } = args.interestInput;
     var newInterest;
     console.log({ args });
@@ -75,15 +76,17 @@ module.exports.createInterest = async (args, context) => {
     return interest;
 }
 
-module.exports.deleteInterestById = async (args,context) =>{
-    if (!checkIfUserLoggedIn(context)) return;
-    const {ID} = args;
+module.exports.deleteInterestById = async (args, context) => {
+    const contextUser = checkIfUserLoggedIn(context);
+    if (!contextUser) return;
+    if (contextUser.role != 1) throw new ApolloError("Only Admins can delete interests.", "NOT_ALLOWED");
+    const { ID } = args;
     const res = await Interest.deleteOne({ _id: ID });  // return 3 fields, last beeing deleteCount
     const wasDeleted = res.deletedCount;
     return wasDeleted;
 }
 
-module.exports.getInterestsForLoggedUser = async (args,context) =>{
+module.exports.getInterestsForLoggedUser = async (args, context) => {
     const contextUser = checkIfUserLoggedIn(context);
     if (!contextUser) return;
     const loggedUser = await User.findById(contextUser.user_id).populate('interests');

@@ -1,0 +1,1 @@
+module.exports.roles = ["USER","ADMIN"]; //0,1

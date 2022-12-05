@@ -53,7 +53,9 @@ module.exports.createPost = async (args, context) => {
 }
 
 module.exports.deletePostById = async (args, context) => {
-    if (!checkIfUserLoggedIn(context)) return;
+    const contextUser = checkIfUserLoggedIn(context);
+    if (!contextUser) return;
+    if (contextUser.role != 1) throw new ApolloError("Only Admins can delete interests.", "NOT_ALLOWED");
     const { ID } = args;
     try {
         //TODO: delete only certain posts
@@ -101,8 +103,6 @@ module.exports.getPostInteraction = async (args,context) => {
     }
     const comments = post.comments;
     const likes = post.likes;
-    const res = comments.concat(likes)
-    // console.log({res})
+    const res = comments.concat(likes);
     return res;
-    // console.log(commments+likes)
 }

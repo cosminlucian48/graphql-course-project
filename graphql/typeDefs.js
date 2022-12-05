@@ -3,6 +3,7 @@ const { gql } = require('apollo-server-express');
 module.exports = gql`
 type User {
     id: ID!
+    role: Int
     firstName: String
     lastName: String
     email: String
@@ -17,6 +18,7 @@ input UserInput{
     lastName: String
     email: String
     password: String
+    role: Int
 }
 
 input RegisterInput{
@@ -25,6 +27,7 @@ input RegisterInput{
     email: String
     password: String
     confirmPassword: String
+    role: Int
 }
 
 input LoginInput{

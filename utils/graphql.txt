@@ -7,14 +7,69 @@ query getAllUssers {
     email
     createdAt
     password
+    interests{
+      __typename
+      ...on MovieInterest {
+        id
+        title
+        movie_genre
+        movie_platform
+        age
+      }
+      ...on GameInterest {
+        id
+        title
+        game_genre
+        game_type
+        game_platform
+      }
+      ...on SportInterest {
+        id
+        title
+        sport_type
+        number_of_players
+      }
+    }
   }
 }
+
+query getUserById{
+  getUserById(ID:"6380840764adc1c77916d9ba"){
+    id
+    email
+    interests{
+      __typename
+      ...on MovieInterest {
+        id
+        title
+        movie_genre
+        movie_platform
+        age
+      }
+      ...on GameInterest {
+        id
+        title
+        game_genre
+        game_type
+        game_platform
+      }
+      ...on SportInterest {
+        id
+        title
+        sport_type
+        number_of_players
+      }
+    }
+  }
+}
+
+
 
  mutation registerOneUser{
   registerUser(registerInput: {
     firstName:"sd",
     lastName:"ss",
-    email:"cosminmardian@yahoo.co",
+    email:"cosminashul@yahoo.com",
     password:"parola",
     confirmPassword:"parola"}) {
     firstName
@@ -28,7 +83,7 @@ query getAllUssers {
 
 mutation login {
   loginUser(loginInput: {
-    email:"cosminmardian@yahoo.co",
+    email:"cosminashul@yahoo.com",
     password:"parola"
   })
 }
@@ -50,7 +105,6 @@ query getAllPosts{
     id
     body
     createdAt
-    email
     comments{
       id
       body
@@ -60,38 +114,69 @@ query getAllPosts{
       email
       createdAt
     }
+    author{
+      id
+      email
+    }
   }
 }
 
 query getPostById{
-  getPostById(ID: "637a3cebc88f030a12e3e95f") {
+  getPostById(ID: "6380a687eb702c88dc4e7140") {
     id
     body
     createdAt
-    email
+    likeCount
+    commentCount
+    author{
+      email
+      firstName
+    }
   }
 }
 
-mutation deletePostById {
-  deletePostById(ID: "637a3ce0c88f030a12e3e95d")
-}
-
-mutation createPost{
-  createPost(body: "tati REAL POST") {
+query getPost($postId: ID!) {
+  getPostById(ID: $postId) {
     id
     body
     createdAt
-    email
+    likeCount
+    commentCount
+    author{
+      email
+      firstName
+    }
+  }
+}
+
+
+
+
+mutation deletePostById {
+  deletePostById(ID: "63808dac1a3573fdc0c6c8ed")
+}
+
+ mutation createPost{
+  createPost(body: "A doua mea postare") {
+    id
+    body
+    createdAt
+    author{
+      id
+      email
+      firstName
+      lastName
+      password
+    }
   }
 }
 
 
 mutation createComment {
-  createComment(postId: "637a3cebc88f030a12e3e95f", body: "FIRST REAL COMMENT") {
+  createComment(postId: "6389f154ad31a8231d06b1ac", body: "SECOND REAL COMMENT") {
     id
     body
     createdAt
-    email
     comments {
       id
       createdAt
@@ -112,7 +197,6 @@ mutation deleteComment{
     id
     body
     createdAt
-    email
     comments {
       id
       createdAt
@@ -131,11 +215,10 @@ mutation deleteComment{
 
 
 mutation likePost{
-  likePost(ID: "637a3cffc88f030a12e3e967") {
+  likePost(ID: "6389f154ad31a8231d06b1ac") {
     id
     body
     createdAt
-    email
     comments {
       id
       createdAt
@@ -150,21 +233,313 @@ mutation likePost{
   }
 }
 
-subscription subpub{
-  newPost {
+query getuserbyidd{
+  getUserById(ID: "637f997f74726353344ce18c") {
+    email
+  }
+}
+
+query likeCount{
+  getPostById(ID: "6380775a5440c47f736302c4") {
+    likeCount
+    commentCount
+  }
+}
+
+
+
+query postsOfUser{
+  getPostsByUser(author_email: "cosminashul@yahoo.com") {
     id
     body
     createdAt
-    email
     comments {
-      id
       createdAt
       email
       body
     }
     likes {
-      id
       createdAt
+      email
+    }
+    likeCount
+    commentCount
+    author {
+      id
+      email
+    }
+  }
+}
+
+
+
+
+query getInterestById{
+  getInterestById(ID: "63832ae0654d81043bd30e48") {
+    __typename
+    ...on MovieInterest {
+      id
+      title
+      movie_genre
+      movie_platform
+      age
+    }
+    ...on GameInterest {
+      id
+      title
+      game_genre
+      game_type
+      game_platform
+    }
+    ...on SportInterest {
+      id
+      title
+      sport_type
+      number_of_players
+    }
+  }
+}
+
+
+
+mutation createInterest {
+  createInterest(interestInput: {
+    title: "Transformers 2 game",
+    game_genre: "MMO",
+    game_platform:"PC"
+    game_type: "multiplayer"
+  }){
+    __typename
+    ...on MovieInterest {
+      title
+      movie_genre
+      movie_platform
+      age
+    }
+    ...on GameInterest {
+      title
+      game_genre
+      game_type
+      game_platform
+    }
+    ...on SportInterest {
+      title
+      sport_type
+      number_of_players
+    }
+  }
+  
+}
+
+query getAllInterest{
+  getAllInterests{
+    __typename
+    ...on MovieInterest {
+      id
+      title
+      movie_genre
+      movie_platform
+      age
+    }
+    ...on GameInterest {
+      id
+      title
+      game_genre
+      game_type
+      game_platform
+    }
+    ...on SportInterest {
+      id
+      title
+      sport_type
+      number_of_players
+    }
+  }
+}
+
+
+
+mutation addInterestToUser{
+  addInterestToUser(interestId: "63832b0a3dcd320f4026467b") {
+    id
+    firstName
+    lastName
+    email
+    createdAt
+    password
+    interests{
+      # __typename
+      ...on MovieInterest {
+        id
+        title
+        movie_genre
+        movie_platform
+        age
+      }
+      ...on GameInterest {
+        id
+        title
+        game_genre
+        game_type
+        game_platform
+      }
+      ...on SportInterest {
+        id
+        title
+        sport_type
+        number_of_players
+      }
+    }
+  }
+}
+
+query getInterestByType{
+  getInterestByType(type: "MovieInterest"){
+    __typename
+      ...on MovieInterest {
+        id
+        title
+        movie_genre
+        movie_platform
+        age
+      }
+      ...on GameInterest {
+        id
+        title
+        game_genre
+        game_type
+        game_platform
+      }
+      ...on SportInterest {
+        id
+        title
+        sport_type
+        number_of_players
+      }
+  }
+}
+
+mutation deleteInterestById{
+  deleteInterestById(ID: "63832ae0654d81043bd30e48")
+}
+
+query getInterestsForLoggedUser{
+  getInterestsForLoggedUser{
+    __typename
+      ...on MovieInterest {
+        id
+        title
+        movie_genre
+        movie_platform
+        age
+      }
+      ...on GameInterest {
+        id
+        title
+        game_genre
+        game_type
+        game_platform
+      }
+      ...on SportInterest {
+        id
+        title
+        sport_type
+        number_of_players
+      }
+  }
+}
+
+query getLoggedUser{
+  getLoggedUser {
+    id
+    firstName
+    lastName
+    email
+    createdAt
+    password
+    interests{
+    __typename
+      ...on MovieInterest {
+        id
+        title
+        movie_genre
+        movie_platform
+        age
+      }
+      ...on GameInterest {
+        id
+        title
+        game_genre
+        game_type
+        game_platform
+      }
+      ...on SportInterest {
+        id
+        title
+        sport_type
+        number_of_players
+      }
+  },
+    posts{
+      id
+      body
+      author{
+        email
+        posts{
+          body
+        }
+      }
+    }
+  },
+  
+}
+
+
+
+mutation deleteUserInterest{
+  deleteUserInterestById(interestId: "6389e787e2966436a00a4b9b") {
+    id
+    firstName
+    lastName
+    email
+    createdAt
+    password
+    interests{
+    __typename
+      ...on MovieInterest {
+        id
+        title
+        movie_genre
+        movie_platform
+        age
+      }
+      ...on GameInterest {
+        id
+        title
+        game_genre
+        game_type
+        game_platform
+      }
+      ...on SportInterest {
+        id
+        title
+        sport_type
+        number_of_players
+      }
+  }
+  }
+}
+
+
+
+query PostInteraction{
+  getPostInteraction(ID: "6389f154ad31a8231d06b1ac"){
+    __typename
+    ...on Comment {
+      body
+      email
+    }
+    ... on Like {
       email
     }
   }

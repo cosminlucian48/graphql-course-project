@@ -9,8 +9,8 @@ const { APQ_CACHE_PREFIX } = require('apollo-server-core/dist/requestPipeline');
 
 module.exports.registerHandler = async (args) => {
     if (!validateRegisterInput(args)) return;
-    const { firstName, lastName, email, password } = args;
-
+    const { firstName, lastName, email, password,role } = args;
+    if (!([0,1].includes(role))) throw new ApolloError("Wrong role for " + email, 'WRONG_ROLE');
     const oldUser = await User.findOne({ email });
     if (oldUser) throw new ApolloError("A user with this email already exists: " + email, 'USER_ALREADY_EXISTS');
 
@@ -21,7 +21,8 @@ module.exports.registerHandler = async (args) => {
         lastName: lastName,
         email: email.toLowerCase(),
         createdAt: new Date().toISOString(),
-        password: encryptedPassword
+        password: encryptedPassword,
+        role
     });
 
     const res = await newUser.save(); //Mongodb saving
@@ -40,18 +41,21 @@ module.exports.getUserById = async (args, context) => {
 }
 
 module.exports.deleteUserById = async (args, context) => {
-    if (!checkIfUserLoggedIn(context)) return;
-
+    const contextUser = checkIfUserLoggedIn(context);
+    if (!contextUser) return;
     const { ID } = args;
+    if (contextUser.role != 1 && contextUser.user_id != ID) throw new ApolloError("Only Admins or the specified user can delete the user.", "NOT_ALLOWED");
     const res = await User.deleteOne({ _id: ID });  // return 3 fields, last beeing deleteCount
     const wasDeleted = res.deletedCount;
     return wasDeleted;
 }
 
 module.exports.editUserById = async (args, context) => {
-    if (!checkIfUserLoggedIn(context)) return;
-
+    const contextUser = checkIfUserLoggedIn(context);
+    if (!contextUser) return;
     const { ID, userInput: { firstName, lastName, email, password } } = args;
+    if (contextUser.role != 1 && contextUser.user_id != ID) throw new ApolloError("Only Admins or the specified user can edit the user.", "NOT_ALLOWED");
+
     const res = await User.updateOne({ _id: ID }, {
         lastName: lastName,
         firstName: firstName,
@@ -104,10 +108,7 @@ module.exports.deleteUserInterestById = async (args, context) => {
     if (!contextUser) return;
     const loggedUser = await User.findById(contextUser.user_id).populate('interests');
     const {interestId} = args;
-    const interestsCounter = loggedUser.interests.length;
-    // console.log({interestsCounter});
     loggedUser.interests = loggedUser.interests.filter(interest => interest.id !== interestId);
-    
     await loggedUser.save();
     return loggedUser;
 }

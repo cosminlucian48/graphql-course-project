@@ -20,7 +20,8 @@ module.exports.loginHandler = async (args) => {
     const token = jwt.sign(
         {
             user_id: user._id,
-            email
+            email, 
+            role: user.role
         },
         MY_SECRET_KEY,
         {

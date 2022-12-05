@@ -13,7 +13,11 @@ const userSchema = new mongoose.Schema({
     posts:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Post'
-    }]
+    }], 
+    role: {
+        type:Number,
+        enum: [0,1]
+    } 
 });
 
 module.exports = mongoose.model('User', userSchema);
